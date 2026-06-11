@@ -1,0 +1,1543 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Baloo+2:wght@700;800;900&display=swap");
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        width: 100%;
+        overflow-x: hidden;
+      }
+      body {
+        font-family: "Fredoka", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #1a0533 0%,
+          #0d1a4a 50%,
+          #0a2a1a 100%
+        );
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        position: relative;
+        padding: 12px;
+      }
+      .stars {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .star {
+        position: absolute;
+        background: #fff;
+        border-radius: 50%;
+        animation: twinkle 3s ease-in-out infinite;
+      }
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0.2;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.4);
+        }
+      }
+
+      .app {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 500px;
+        min-height: 400px;
+      }
+
+      .page {
+        display: none;
+        animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .page.active {
+        display: block;
+      }
+      @keyframes slideIn {
+        0% {
+          opacity: 0;
+          transform: translateY(40px) scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 24px;
+        padding: clamp(18px, 5vw, 32px) clamp(16px, 5vw, 28px)
+          clamp(16px, 4vw, 28px);
+        box-shadow:
+          0 0 60px rgba(255, 111, 169, 0.3),
+          0 20px 40px rgba(0, 0, 0, 0.4);
+        border: 3px solid rgba(255, 255, 255, 0.6);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(
+          circle,
+          rgba(140, 111, 255, 0.15),
+          transparent
+        );
+        border-radius: 50%;
+      }
+
+      .badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #8c6fff, #ff6fa9);
+        color: #fff;
+        font-size: clamp(10px, 2.5vw, 12px);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 5px 14px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+      .prog-bar {
+        background: #eee;
+        border-radius: 999px;
+        height: 8px;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .prog-fill {
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #8c6fff, #ff6fa9, #4ecdf2);
+        transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .big-emoji {
+        font-size: clamp(44px, 12vw, 64px);
+        margin-bottom: 6px;
+        display: block;
+        animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0) rotate(-20deg);
+        }
+        100% {
+          transform: scale(1) rotate(0);
+        }
+      }
+
+      h1,
+      h2 {
+        font-family: "Baloo 2", sans-serif;
+        color: #1a0533;
+        line-height: 1.1;
+        margin-bottom: 8px;
+      }
+      h1 {
+        font-size: clamp(26px, 7vw, 42px);
+        font-weight: 900;
+      }
+      h2 {
+        font-size: clamp(18px, 5vw, 28px);
+        font-weight: 800;
+      }
+      .sub {
+        color: #6b4fa0;
+        font-size: clamp(13px, 3.5vw, 16px);
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+      p.body {
+        color: #444;
+        font-size: clamp(13px, 3.5vw, 15px);
+        line-height: 1.6;
+        margin-bottom: 14px;
+      }
+
+      .dashes {
+        border: none;
+        border-top: 3px dashed #e0d5f5;
+        margin: 14px -16px;
+      }
+      @media (min-width: 400px) {
+        .dashes {
+          margin: 16px -28px;
+        }
+      }
+
+      .info-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f8f3ff;
+        border: 2px solid #e0d5f5;
+        border-radius: 14px;
+        padding: 9px 12px;
+        text-align: left;
+        margin-bottom: 8px;
+      }
+      .info-icon {
+        font-size: clamp(20px, 5vw, 26px);
+        flex-shrink: 0;
+      }
+      .info-label {
+        font-size: clamp(9px, 2.5vw, 11px);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #8c6fff;
+        font-weight: 700;
+      }
+      .info-val {
+        font-size: clamp(13px, 3.5vw, 15px);
+        font-weight: 600;
+        color: #1a0533;
+      }
+
+      .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .btn {
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 800;
+        font-size: clamp(14px, 4vw, 16px);
+        border: 3px solid #1a0533;
+        border-radius: 999px;
+        padding: clamp(11px, 3vw, 13px) 20px;
+        cursor: pointer;
+        transition: all 0.15s;
+        box-shadow: 4px 4px 0 #1a0533;
+        width: 100%;
+        touch-action: manipulation;
+      }
+      .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 #1a0533;
+      }
+      .btn-yes {
+        background: #4ade80;
+        color: #0a2a10;
+      }
+      .btn-yes:hover {
+        background: #22c55e;
+      }
+      .btn-no {
+        background: #fff;
+        color: #ff6fa9;
+        border-color: #ff6fa9;
+        box-shadow: 4px 4px 0 #ff6fa9;
+      }
+      .btn-no:hover {
+        background: #fff0f7;
+      }
+      .btn-choice {
+        background: #ffd166;
+        color: #1a0533;
+      }
+      .btn-choice:hover {
+        background: #ffc233;
+      }
+      .btn-choice.wrong {
+        background: #ff8c8c;
+        animation: shake 0.4s ease;
+      }
+      .btn-choice.correct {
+        background: #4ade80;
+        color: #0a2a10;
+      }
+      .btn-choice:disabled {
+        opacity: 0.7;
+        cursor: default;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-8px);
+        }
+        75% {
+          transform: translateX(8px);
+        }
+        50% {
+          transform: translateX(6px);
+        }
+        85% {
+          transform: translateX(-5px);
+        }
+      }
+
+      .feedback {
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 700;
+        font-size: clamp(12px, 3.5vw, 15px);
+        min-height: 20px;
+        color: #8c6fff;
+        margin: 8px 0;
+      }
+      .hint {
+        font-size: clamp(11px, 3vw, 12px);
+        color: #a78bce;
+        margin-top: 8px;
+        font-style: italic;
+      }
+
+      /* Dodging button wrapper */
+      .dodging-wrap {
+        position: relative;
+        height: 70px;
+        margin-top: 8px;
+      }
+      #no-btn-1 {
+        position: absolute;
+        transition:
+          top 0.15s ease,
+          left 0.15s ease;
+        width: auto;
+        min-width: 110px;
+      }
+
+      /* Catch area */
+      .catch-area {
+        position: relative;
+        height: 90px;
+        margin: 10px 0;
+        overflow: hidden;
+        border: 2px dashed #e0d5f5;
+        border-radius: 16px;
+      }
+      #dodgy-btn {
+        position: absolute;
+        transition:
+          top 0.18s,
+          left 0.18s;
+        width: auto;
+        min-width: 90px;
+        font-size: clamp(12px, 3.5vw, 14px);
+        padding: 9px 16px;
+        touch-action: manipulation;
+      }
+
+      /* Input */
+      .input-wrap {
+        display: flex;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      .text-inp {
+        flex: 1;
+        font-family: "Fredoka", sans-serif;
+        font-size: clamp(14px, 4vw, 16px);
+        border: 3px solid #1a0533;
+        border-radius: 14px;
+        padding: 10px 14px;
+        color: #1a0533;
+        background: #fffbfe;
+        box-shadow: 3px 3px 0 #d0c8e8;
+        outline: none;
+        min-width: 0;
+      }
+      .text-inp:focus {
+        border-color: #8c6fff;
+        box-shadow: 3px 3px 0 #8c6fff;
+      }
+
+      /* Type choices */
+      .type-choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      .tc {
+        border: 3px solid #1a0533;
+        border-radius: 16px;
+        padding: clamp(10px, 3vw, 14px) 8px;
+        cursor: pointer;
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 800;
+        font-size: clamp(11px, 3vw, 13px);
+        background: #fffbfe;
+        color: #1a0533;
+        transition: all 0.15s;
+        box-shadow: 3px 3px 0 #1a0533;
+        touch-action: manipulation;
+        line-height: 1.3;
+      }
+      .tc:hover {
+        transform: translateY(-2px);
+      }
+      .tc.picked {
+        background: #8c6fff;
+        color: #fff;
+        border-color: #8c6fff;
+        box-shadow: 3px 3px 0 #4a27c9;
+      }
+
+      /* Memory game */
+      #memory-game {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(6px, 2vw, 8px);
+        margin: 12px 0;
+      }
+      .mem-card {
+        aspect-ratio: 1;
+        border: 3px solid #1a0533;
+        border-radius: 12px;
+        background: #8c6fff;
+        cursor: pointer;
+        font-size: clamp(18px, 5vw, 22px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s;
+        box-shadow: 3px 3px 0 #1a0533;
+        user-select: none;
+        touch-action: manipulation;
+      }
+      .mem-card:hover {
+        transform: scale(1.06);
+      }
+      .mem-card.flipped {
+        background: #fff;
+      }
+      .mem-card.matched {
+        background: #4ade80;
+        cursor: default;
+      }
+
+      /* Counter */
+      #counter-display {
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 900;
+        font-size: clamp(36px, 10vw, 48px);
+        color: #ff6fa9;
+        line-height: 1;
+        display: block;
+        margin: 8px 0;
+      }
+      .counter-grid {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin: 12px 0;
+      }
+      .c-btn {
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 800;
+        font-size: clamp(14px, 4.5vw, 22px);
+        border: 3px solid #1a0533;
+        border-radius: 14px;
+        padding: 10px 20px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0 #1a0533;
+        background: #ffd166;
+        touch-action: manipulation;
+      }
+      .c-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 #1a0533;
+      }
+
+      /* Oath */
+      .oath-text {
+        background: #f8f3ff;
+        border: 2px solid #d0c8e8;
+        border-radius: 14px;
+        padding: 12px 14px;
+        text-align: left;
+        font-size: clamp(12px, 3.2vw, 14px);
+        color: #3d2870;
+        line-height: 1.8;
+        margin: 10px 0;
+        font-weight: 600;
+      }
+      .oath-text span {
+        color: #8c6fff;
+        font-weight: 700;
+      }
+
+      /* Slot */
+      #slot-display {
+        font-size: clamp(28px, 8vw, 40px);
+        letter-spacing: 4px;
+        background: #1a0533;
+        color: #ffd166;
+        border-radius: 14px;
+        padding: 12px 16px;
+        display: inline-block;
+        margin: 8px 0;
+        border: 3px solid #8c6fff;
+        font-family: monospace;
+      }
+
+      /* Verdict bar */
+      #verdict-bar {
+        width: 100%;
+        height: 24px;
+        border-radius: 999px;
+        border: 2px solid #1a0533;
+        overflow: hidden;
+        margin: 10px 0;
+        display: flex;
+      }
+      #v-no {
+        height: 100%;
+        background: #ff6fa9;
+        transition: width 0.5s;
+      }
+      #v-yes {
+        height: 100%;
+        background: #4ade80;
+        transition: width 0.5s;
+        flex: 1;
+      }
+
+      /* Confetti */
+      .confetti-canvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 99;
+        display: none;
+      }
+
+      /* Glow */
+      .glow {
+        animation: glowPulse 1.5s ease-in-out infinite alternate;
+      }
+      @keyframes glowPulse {
+        from {
+          box-shadow:
+            4px 4px 0 #1a0533,
+            0 0 0 rgba(140, 111, 255, 0);
+        }
+        to {
+          box-shadow:
+            4px 4px 0 #1a0533,
+            0 0 30px rgba(140, 111, 255, 0.8),
+            0 0 60px rgba(255, 111, 169, 0.4);
+        }
+      }
+
+      .final-stars {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 24px;
+      }
+
+      /* Math puzzle - scale for small screens */
+      .math-puzzle {
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 900;
+        font-size: clamp(20px, 6vw, 36px);
+        color: #8c6fff;
+        margin-bottom: 16px;
+        line-height: 1.4;
+      }
+      .math-puzzle .answer-line {
+        font-size: clamp(14px, 4.5vw, 24px);
+        color: #ff6fa9;
+      }
+
+      /* Verdict inner text */
+      .verdict-inner {
+        background: #1a0533;
+        border-radius: 18px;
+        padding: clamp(12px, 4vw, 18px);
+        margin: 14px 0;
+      }
+      .verdict-title {
+        color: #ffd166;
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 900;
+        font-size: clamp(15px, 4.5vw, 20px);
+        margin-bottom: 8px;
+      }
+      .verdict-sub {
+        color: #ccc;
+        font-size: clamp(11px, 3vw, 13px);
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stars" id="stars"></div>
+    <canvas class="confetti-canvas" id="confetti"></canvas>
+
+    <div class="app">
+      <!-- PAGE 1: Invitation -->
+      <div class="page active" id="p1">
+        <div class="card">
+          <div class="badge">📬 You have been selected</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 9%"></div>
+          </div>
+          <span class="big-emoji">🎈</span>
+          <p class="sub">You are cordially invited to the</p>
+          <h1>
+            KADIWA<br /><span style="color: #ff6fa9">Monthly Meet-up</span
+            ><br />Get-Together
+          </h1>
+          <p
+            style="
+              font-size: clamp(12px, 3vw, 14px);
+              color: #a78bce;
+              margin-bottom: 4px;
+              font-weight: 600;
+            "
+          >
+            Youth Fellowship • Fun • Food • Friends
+          </p>
+          <hr class="dashes" />
+          <div class="info-row">
+            <span class="info-icon">📅</span>
+            <div>
+              <div class="info-label">Date</div>
+              <div class="info-val">Sunday, June 14, 2026</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="info-icon">⏰</span>
+            <div>
+              <div class="info-label">Time</div>
+              <div class="info-val">5:00 PM — until the last laugh</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="info-icon">🎉</span>
+            <div>
+              <div class="info-label">Expect</div>
+              <div class="info-val">Games, food, connections & chaos</div>
+            </div>
+          </div>
+          <hr class="dashes" />
+          <p
+            style="
+              font-family: &quot;Baloo 2&quot;;
+              font-weight: 800;
+              font-size: clamp(16px, 4.5vw, 20px);
+              color: #1a0533;
+              margin-bottom: 14px;
+            "
+          >
+            So... will you grace us with your presence?
+          </p>
+          <div class="btn-group">
+            <button class="btn btn-yes" onclick="sayYes()">
+              Yes, I'll be there! 🙌
+            </button>
+            <div class="dodging-wrap">
+              <button
+                class="btn btn-no"
+                id="no-btn-1"
+                onmouseenter="dodge1()"
+                ontouchstart="dodge1()"
+                onclick="goTo(1)"
+              >
+                No thanks 😅
+              </button>
+            </div>
+          </div>
+          <p class="hint">👀 Try clicking "No" if you think you can...</p>
+        </div>
+      </div>
+
+      <!-- PAGE 2: WHY NO? Form -->
+      <div class="page" id="p2">
+        <div class="card">
+          <div class="badge">📋 Official No Request Form</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 18%"></div>
+          </div>
+          <span class="big-emoji">🗃️</span>
+          <h2>Whoa. A "No"?</h2>
+          <p class="body">
+            No problem! We just need you to fill out this
+            <b>Official Declination Form</b> first. It's required by law. (Our
+            law.)
+          </p>
+          <p
+            style="
+              font-size: clamp(12px, 3.5vw, 14px);
+              margin-bottom: 4px;
+              font-weight: 700;
+              color: #1a0533;
+            "
+          >
+            Select your reason for declining:
+          </p>
+          <div class="type-choices" id="reason-choices">
+            <div class="tc" onclick="pickReason(this, 'busy')">
+              📅 I'm busy<br /><span
+                style="font-size: 11px; color: #a78bce; font-weight: 600"
+                >(with what, exactly?)</span
+              >
+            </div>
+            <div class="tc" onclick="pickReason(this, 'tired')">
+              😴 I'm tired<br /><span
+                style="font-size: 11px; color: #a78bce; font-weight: 600"
+                >(sleep when you're old)</span
+              >
+            </div>
+            <div class="tc" onclick="pickReason(this, 'shy')">
+              🙈 I'm shy<br /><span
+                style="font-size: 11px; color: #a78bce; font-weight: 600"
+                >(we're ALL shy!)</span
+              >
+            </div>
+            <div class="tc" onclick="pickReason(this, 'other')">
+              🤔 Other<br /><span
+                style="font-size: 11px; color: #a78bce; font-weight: 600"
+                >(unacceptable)</span
+              >
+            </div>
+          </div>
+          <div id="reason-feedback" class="feedback"></div>
+          <button
+            class="btn btn-yes"
+            id="reason-next"
+            style="display: none"
+            onclick="goTo(2)"
+          >
+            Submit Form & Continue 📤
+          </button>
+          <button
+            class="btn btn-yes"
+            style="margin-top: 10px; background: #4ade80"
+            onclick="sayYes()"
+          >
+            Wait — I changed my mind. YES! 🙌
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 3: Math / Logic Puzzle -->
+      <div class="page" id="p3">
+        <div class="card">
+          <div class="badge">🧮 IQ Verification Required</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 27%"></div>
+          </div>
+          <span class="big-emoji">🧠</span>
+          <h2>Declining requires a verified IQ.</h2>
+          <p class="body">
+            The Department of Not-Going-to-Fun-Events requires you to pass this
+            intelligence test. Don't overthink it.
+          </p>
+          <div class="math-puzzle">
+            🍕 + 🍕 + 🍕 = 30<br />
+            🍔 + 🍔 + 🍕 = 20<br />
+            🍔 − 🍟 = 5<br />
+            <span class="answer-line">🍟 + 🍕 × 🍔 = ?</span>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-choice" onclick="checkQ3(this, '55')">
+              55
+            </button>
+            <button class="btn btn-choice" onclick="checkQ3(this, '65')">
+              65
+            </button>
+            <button
+              class="btn btn-choice"
+              data-correct
+              onclick="checkQ3(this, '65')"
+            >
+              Wait, also 65 but...
+            </button>
+            <button
+              class="btn btn-choice"
+              data-real-correct
+              onclick="checkQ3(this, '105')"
+            >
+              105
+            </button>
+          </div>
+          <div class="feedback" id="fb3"></div>
+          <button
+            class="btn btn-yes"
+            id="q3-next"
+            style="display: none"
+            onclick="goTo(3)"
+          >
+            Fine. Onto the next trap 🪤
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 4: Memory Game -->
+      <div class="page" id="p4">
+        <div class="card">
+          <div class="badge">🧩 Memory Examination</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 36%"></div>
+          </div>
+          <span class="big-emoji">🃏</span>
+          <h2>Match the pairs to proceed.</h2>
+          <p class="body">
+            If you can't remember 4 pairs of cards, how will you remember all
+            the fun you'll miss at Kadiwa? 🤔
+          </p>
+          <div id="memory-game"></div>
+          <div class="feedback" id="fb4">
+            Matched: <span id="match-count">0</span> / 4
+          </div>
+          <button
+            class="btn btn-yes"
+            id="mem-next"
+            style="display: none"
+            onclick="goTo(4)"
+          >
+            My brain works! Sadly. Continue 😭
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 5: Counter Challenge -->
+      <div class="page" id="p5">
+        <div class="card">
+          <div class="badge">🖱️ Persistence Test</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 45%"></div>
+          </div>
+          <span class="big-emoji">😤</span>
+          <h2>Click "I don't wanna go" exactly 20 times.</h2>
+          <p class="body">
+            Twenty. Times. If you really don't want to come, prove your
+            commitment. Every. Single. Click.
+          </p>
+          <span id="counter-display">0</span>
+          <div class="counter-grid">
+            <button class="c-btn" onclick="countUp()">
+              I don't wanna go 🙅
+            </button>
+          </div>
+          <div class="feedback" id="fb5">
+            That's only <span id="c-count">0</span> out of 20...
+          </div>
+          <button
+            class="btn btn-yes"
+            id="cnt-next"
+            style="display: none"
+            onclick="goTo(5)"
+          >
+            Okay I PROVED it. Now what? 😮‍💨
+          </button>
+          <button
+            class="btn btn-yes"
+            style="margin-top: 8px; background: #4ade80"
+            onclick="sayYes()"
+          >
+            Ugh, I'll just go. YES! 🎉
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 6: The Riddle -->
+      <div class="page" id="p6">
+        <div class="card">
+          <div class="badge">🧩 Official Riddle Exam</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 54%"></div>
+          </div>
+          <span class="big-emoji">🦁</span>
+          <h2>You must answer the ancient riddle.</h2>
+          <p class="body" style="font-style: italic; color: #5a3d9e">
+            "The more you take from it, the bigger it grows. It's not food, not
+            money — but everyone carries one. What is it?"
+          </p>
+          <div class="btn-group" id="riddle-choices">
+            <button class="btn btn-choice" onclick="checkRiddle(this, 'debt')">
+              Debt 💸
+            </button>
+            <button
+              class="btn btn-choice"
+              onclick="checkRiddle(this, 'hole')"
+              data-correct
+            >
+              A Hole 🕳️
+            </button>
+            <button
+              class="btn btn-choice"
+              onclick="checkRiddle(this, 'regret')"
+            >
+              Regret 😔
+            </button>
+            <button class="btn btn-choice" onclick="checkRiddle(this, 'ego')">
+              Your Ego 😎
+            </button>
+          </div>
+          <div class="feedback" id="fb6"></div>
+          <button
+            class="btn btn-yes"
+            id="riddle-next"
+            style="display: none"
+            onclick="goTo(6)"
+          >
+            Smart! Onward! 🧠✨
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 7: Catch the dodging button -->
+      <div class="page" id="p7">
+        <div class="card">
+          <div class="badge">🏃 Agility Assessment</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 63%"></div>
+          </div>
+          <span class="big-emoji">🐒</span>
+          <h2>Catch the "No" button 5 times.</h2>
+          <p class="body">
+            It's very slippery. Like your excuses. Tap/click it 5 times to prove
+            your No is intentional.
+          </p>
+          <div class="catch-area" id="catch-area">
+            <button
+              class="btn btn-no"
+              id="dodgy-btn"
+              style="
+                position: absolute;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+              "
+              onclick="catchBtn()"
+            >
+              No! 🏃
+            </button>
+          </div>
+          <div class="feedback" id="fb7">
+            Caught: <span id="catch-ct">0</span> / 5
+          </div>
+          <button
+            class="btn btn-yes"
+            id="catch-next"
+            style="display: none"
+            onclick="goTo(7)"
+          >
+            I caught it! Now what?! 😤
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 8: Slot Machine / Spin -->
+      <div class="page" id="p8">
+        <div class="card">
+          <div class="badge">🎰 Fate Decider</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 72%"></div>
+          </div>
+          <span class="big-emoji">🎰</span>
+          <h2>Let the universe decide.</h2>
+          <p class="body">
+            You've come this far. Let's let fate handle it. Spin 3 times. If you
+            get 3 of the same symbol, you're free. (You won't.)
+          </p>
+          <div id="slot-display">🎈 🎉 🎊</div>
+          <p class="feedback" id="fb8">
+            Spins left: <span id="spins-left">3</span>
+          </p>
+          <button
+            class="btn btn-choice"
+            id="spin-btn"
+            onclick="spinSlot()"
+            style="margin-top: 10px"
+          >
+            🎰 SPIN
+          </button>
+          <button
+            class="btn btn-yes"
+            id="spin-next"
+            style="display: none"
+            onclick="goTo(8)"
+          >
+            Fine! The universe has spoken 🌌
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 9: Oath of Attendance -->
+      <div class="page" id="p9">
+        <div class="card">
+          <div class="badge">📜 Sacred Oath Required</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 81%"></div>
+          </div>
+          <span class="big-emoji">⚖️</span>
+          <h2>Type the oath to decline officially.</h2>
+          <p class="body">
+            This is the final legal requirement. Type your full name below to
+            declare your intent.
+          </p>
+          <div class="oath-text">
+            "I, <span>[your name here]</span>, hereby solemnly declare that I am
+            willingly choosing to <span>miss free food</span>, skip
+            <span>actual fun</span>, and avoid making <span>new friends</span>.
+            I accept that I will experience <span>FOMO</span> and that this is
+            <span>entirely my fault</span>."
+          </div>
+          <div class="input-wrap">
+            <input
+              class="text-inp"
+              id="name-inp"
+              type="text"
+              placeholder="Type your name..."
+              oninput="checkName()"
+            />
+            <button
+              class="btn"
+              style="
+                width: auto;
+                padding: 10px 14px;
+                background: #ff6fa9;
+                color: #fff;
+                border-color: #ff6fa9;
+                box-shadow: 3px 3px 0 #c43d7a;
+              "
+              onclick="checkNameSubmit()"
+            >
+              Sign ✍️
+            </button>
+          </div>
+          <div class="feedback" id="fb9"></div>
+          <button
+            class="btn btn-yes"
+            id="oath-next"
+            style="display: none"
+            onclick="goTo(9)"
+          >
+            Signature submitted 😔 Continue...
+          </button>
+          <button
+            class="btn btn-yes"
+            style="margin-top: 10px; background: #4ade80"
+            onclick="sayYes()"
+          >
+            Wait — I can't do this. YES, I'll come! 🙌
+          </button>
+        </div>
+      </div>
+
+      <!-- PAGE 10: The Final Verdict -->
+      <div class="page" id="p10">
+        <div class="card">
+          <div class="badge">🏆 FINAL VERDICT</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 90%"></div>
+          </div>
+          <span class="big-emoji">⚡</span>
+          <h2>After 9 grueling challenges...</h2>
+          <p class="body">
+            You've done math, memory, caught slippery buttons, spun fate itself,
+            and signed a sacred oath. The committee has reviewed your case and
+            reached a unanimous decision.
+          </p>
+          <div class="verdict-inner">
+            <p class="verdict-title">📊 Committee Verdict</p>
+            <div id="verdict-bar">
+              <div id="v-no" style="width: 0%"></div>
+              <div id="v-yes"></div>
+            </div>
+            <p class="verdict-sub" id="verdict-text">Calculating...</p>
+          </div>
+          <p class="body">
+            The committee votes: <b style="color: #ff6fa9">0% No</b> and
+            <b style="color: #4ade80">100% YES</b>.<br />
+            Your "No" application has been <b style="color: #ff4444">DENIED</b>.
+            🔴
+          </p>
+          <button
+            class="btn btn-yes glow"
+            onclick="sayYes()"
+            style="font-size: clamp(15px, 4.5vw, 18px); padding: 14px"
+          >
+            ✅ CONFIRMED: I'll be at Kadiwa! 🎊🎈
+          </button>
+          <p class="hint">
+            Resistance is futile. The food alone is worth it. 🍽️
+          </p>
+        </div>
+      </div>
+
+      <!-- PAGE 11: YES! Final -->
+      <div class="page" id="p11">
+        <div class="card">
+          <div class="final-stars" id="fstars"></div>
+          <div class="badge">🎊 WE KNEW IT ALL ALONG</div>
+          <div class="prog-bar">
+            <div class="prog-fill" style="width: 100%"></div>
+          </div>
+          <span class="big-emoji" style="font-size: clamp(48px, 14vw, 72px)"
+            >🥳</span
+          >
+          <h1 style="color: #8c6fff">YES!!! 🎉</h1>
+          <p
+            style="
+              font-family: &quot;Baloo 2&quot;;
+              font-weight: 800;
+              font-size: clamp(17px, 5vw, 22px);
+              color: #ff6fa9;
+              margin-bottom: 10px;
+            "
+          >
+            You survived the gauntlet!
+          </p>
+          <hr class="dashes" />
+          <div class="info-row">
+            <span class="info-icon">📅</span>
+            <div>
+              <div class="info-label">We'll see you on</div>
+              <div class="info-val">Sunday, June 14, 2026 at 5:00 PM</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="info-icon">🎈</span>
+            <div>
+              <div class="info-label">Kadiwa Monthly</div>
+              <div class="info-val">Meet-up Get-Together</div>
+            </div>
+          </div>
+          <hr class="dashes" />
+          <p class="body">
+            Now click the button below to officially confirm your spot. (We
+            promise this one doesn't run away.)
+          </p>
+          <button
+            class="btn btn-yes glow"
+            onclick="redirectForm()"
+            style="font-size: clamp(15px, 4.5vw, 18px); padding: 16px"
+          >
+            🎊 Confirm My Spot Officially!
+          </button>
+          <p class="hint">
+            🎈 Thank you for enduring our absolutely ridiculous invitation. We
+            love you. See you soon!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const FORM_URL = "https://forms.gle/P4iJu5edXPWfVcfE9";
+      let currentPage = 0;
+      const pages = document.querySelectorAll(".page");
+
+      function goTo(n) {
+        pages[currentPage].classList.remove("active");
+        currentPage = n;
+        pages[currentPage].classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (n === 9) setTimeout(animateVerdict, 500);
+      }
+
+      function redirectForm() {
+        window.open(FORM_URL, "_blank");
+      }
+
+      function sayYes() {
+        launchConfetti();
+        setTimeout(() => goTo(10), 400);
+      }
+
+      // Stars background
+      const starsEl = document.getElementById("stars");
+      for (let i = 0; i < 80; i++) {
+        const s = document.createElement("div");
+        s.className = "star";
+        s.style.cssText = `width:${1 + Math.random() * 3}px;height:${1 + Math.random() * 3}px;left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 3}s;animation-duration:${2 + Math.random() * 3}s`;
+        starsEl.appendChild(s);
+      }
+
+      // PAGE 1: dodge button
+      const nob1 = document.getElementById("no-btn-1");
+      const wrap1 = nob1.parentElement;
+      function dodge1() {
+        const w = wrap1.offsetWidth - nob1.offsetWidth;
+        const h = wrap1.offsetHeight - nob1.offsetHeight;
+        nob1.style.left = Math.max(0, Math.random() * w) + "px";
+        nob1.style.top = Math.max(0, Math.random() * h) + "px";
+      }
+
+      // PAGE 2: reason picker
+      let reasonPicked = false;
+      const funnyResponses = {
+        busy: "LOL. Busy doing what? We both know you're scrolling TikTok. 😏",
+        tired: "You'll be MORE tired from the FOMO. Just saying. 😴",
+        shy: "We are ALL shy! That's literally WHY we have Kadiwa. Ironic. 🙈",
+        other: "'Other' is not a valid reason. Nice try though! 🤔",
+      };
+      function pickReason(el, val) {
+        document
+          .querySelectorAll(".tc")
+          .forEach((t) => t.classList.remove("picked"));
+        el.classList.add("picked");
+        document.getElementById("reason-feedback").textContent =
+          funnyResponses[val];
+        document.getElementById("reason-next").style.display = "block";
+      }
+
+      // PAGE 3: Math puzzle
+      function checkQ3(el, val) {
+        const correct = el.hasAttribute("data-real-correct");
+        if (correct) {
+          el.classList.add("correct");
+          document.getElementById("fb3").textContent =
+            "✅ Correct! (🍟=5, 🍕=10, 🍔=10. BODMAS: 5 + 10×10 = 105) Nerd.";
+          document
+            .querySelectorAll("#p3 .btn-choice")
+            .forEach((b) => (b.disabled = true));
+          document.getElementById("q3-next").style.display = "block";
+        } else {
+          el.classList.add("wrong");
+          document.getElementById("fb3").textContent =
+            "❌ Nope! Think harder. (Hint: BODMAS rules apply 🤓)";
+          setTimeout(() => el.classList.remove("wrong"), 500);
+        }
+      }
+
+      // PAGE 4: Memory Game
+      const memEmojis = ["🌟", "🎈", "🍕", "🎊"];
+      let memCards = [...memEmojis, ...memEmojis].sort(
+        () => Math.random() - 0.5,
+      );
+      let flipped = [],
+        matched = 0,
+        canFlip = true;
+      function buildMemory() {
+        const grid = document.getElementById("memory-game");
+        grid.innerHTML = "";
+        memCards.forEach((em, i) => {
+          const c = document.createElement("div");
+          c.className = "mem-card";
+          c.dataset.emoji = em;
+          c.dataset.idx = i;
+          c.textContent = "❓";
+          c.onclick = () => flipCard(c);
+          grid.appendChild(c);
+        });
+      }
+      function flipCard(c) {
+        if (
+          !canFlip ||
+          c.classList.contains("flipped") ||
+          c.classList.contains("matched")
+        )
+          return;
+        c.classList.add("flipped");
+        c.textContent = c.dataset.emoji;
+        flipped.push(c);
+        if (flipped.length === 2) {
+          canFlip = false;
+          if (flipped[0].dataset.emoji === flipped[1].dataset.emoji) {
+            flipped.forEach((f) => f.classList.add("matched"));
+            matched++;
+            document.getElementById("match-count").textContent = matched;
+            flipped = [];
+            canFlip = true;
+            if (matched === 4) {
+              document.getElementById("fb4").textContent =
+                "🎉 All pairs matched! Your memory works... unfortunately.";
+              document.getElementById("mem-next").style.display = "block";
+            }
+          } else {
+            setTimeout(() => {
+              flipped.forEach((f) => {
+                f.classList.remove("flipped");
+                f.textContent = "❓";
+              });
+              flipped = [];
+              canFlip = true;
+            }, 900);
+          }
+        }
+      }
+      buildMemory();
+
+      // PAGE 5: Counter
+      let count = 0,
+        target = 20;
+      function countUp() {
+        count++;
+        document.getElementById("counter-display").textContent = count;
+        document.getElementById("c-count").textContent = count;
+        const msgs = [
+          "That's only",
+          "Keep going...",
+          "Almost giving up?",
+          "Rethinking yet?",
+          "10 more!",
+          "So committed to NO?",
+          "Your loss tbh 😏",
+          "FOMO loading...",
+          "Are you SURE?",
+          "Last chance to say YES!",
+        ];
+        if (count < target)
+          document.getElementById("fb5").textContent =
+            (msgs[Math.min(count - 1, msgs.length - 1)] || "Keep clicking...") +
+            ` ${count} / 20`;
+        if (count >= target) {
+          document.getElementById("fb5").textContent =
+            "🥵 Okay fine. You clicked 20 times. You're committed to nothing. Proceed.";
+          document.getElementById("cnt-next").style.display = "block";
+        }
+      }
+
+      // PAGE 6: Riddle
+      function checkRiddle(el, val) {
+        const correct = el.hasAttribute("data-correct");
+        if (correct) {
+          el.classList.add("correct");
+          document.getElementById("fb6").textContent =
+            "✅ Correct! A hole! Just like the hole in your plans for that evening. 🕳️";
+          document
+            .querySelectorAll("#p6 .btn-choice")
+            .forEach((b) => (b.disabled = true));
+          document.getElementById("riddle-next").style.display = "block";
+        } else {
+          el.classList.add("wrong");
+          const sass = {
+            debt: "Relatable, but wrong.",
+            regret: "You'll feel regret if you skip Kadiwa though 👀",
+            ego: "Haha. Wrong though.",
+          };
+          document.getElementById("fb6").textContent =
+            "❌ " + (sass[val] || "Wrong!") + " Try again!";
+          setTimeout(() => el.classList.remove("wrong"), 500);
+        }
+      }
+
+      // PAGE 7: Catch button
+      let catchCount = 0,
+        catching = false;
+      const dodgyBtn = document.getElementById("dodgy-btn");
+      const catchArea = document.getElementById("catch-area");
+      dodgyBtn.onmouseenter = dodgyBtn.ontouchstart = () => {
+        if (catching) return;
+        catching = true;
+        const mx = catchArea.offsetWidth - dodgyBtn.offsetWidth - 10;
+        const my = catchArea.offsetHeight - dodgyBtn.offsetHeight - 10;
+        dodgyBtn.style.left = Math.max(5, Math.random() * mx) + "px";
+        dodgyBtn.style.top = Math.max(5, Math.random() * my) + "px";
+        setTimeout(() => (catching = false), 200);
+      };
+      function catchBtn() {
+        catchCount++;
+        document.getElementById("catch-ct").textContent = catchCount;
+        if (catchCount >= 5) {
+          document.getElementById("fb7").textContent =
+            "🎯 Got it 5 times! Impressive. Annoyingly.";
+          document.getElementById("catch-next").style.display = "block";
+          dodgyBtn.disabled = true;
+        } else {
+          document.getElementById("fb7").textContent =
+            `Caught: ${catchCount} / 5 — ${5 - catchCount} more to go!`;
+          const mx = catchArea.offsetWidth - dodgyBtn.offsetWidth - 10;
+          const my = catchArea.offsetHeight - dodgyBtn.offsetHeight - 10;
+          dodgyBtn.style.left = Math.max(5, Math.random() * mx) + "px";
+          dodgyBtn.style.top = Math.max(5, Math.random() * my) + "px";
+        }
+      }
+
+      // PAGE 8: Slot machine
+      const emojis = ["🎈", "🎉", "🎊", "⭐", "🌟", "🎵"];
+      let spinsLeft = 3,
+        spinning = false;
+      function spinSlot() {
+        if (spinning || spinsLeft <= 0) return;
+        spinning = true;
+        document.getElementById("spin-btn").disabled = true;
+        let frames = 0,
+          maxFrames = 18;
+        const interval = setInterval(() => {
+          const a = emojis[Math.floor(Math.random() * emojis.length)];
+          const b = emojis[Math.floor(Math.random() * emojis.length)];
+          const c = emojis[Math.floor(Math.random() * emojis.length)];
+          document.getElementById("slot-display").textContent =
+            `${a} ${b} ${c}`;
+          frames++;
+          if (frames >= maxFrames) {
+            clearInterval(interval);
+            let s1, s2, s3;
+            do {
+              s1 = emojis[Math.floor(Math.random() * emojis.length)];
+              s2 = emojis[Math.floor(Math.random() * emojis.length)];
+              s3 = emojis[Math.floor(Math.random() * emojis.length)];
+            } while (s1 === s2 && s2 === s3);
+            document.getElementById("slot-display").textContent =
+              `${s1} ${s2} ${s3}`;
+            spinsLeft--;
+            document.getElementById("spins-left").textContent = spinsLeft;
+            if (spinsLeft > 0) {
+              document.getElementById("fb8").textContent =
+                `❌ No match! ${spinsLeft} spin${spinsLeft > 1 ? "s" : ""} left. The universe says try again 🌌`;
+              document.getElementById("spin-btn").disabled = false;
+            } else {
+              document.getElementById("fb8").textContent =
+                "🎰 3 spins, 0 matches. The universe CLEARLY wants you at Kadiwa.";
+              document.getElementById("spin-btn").style.display = "none";
+              document.getElementById("spin-next").style.display = "block";
+            }
+            spinning = false;
+          }
+        }, 60);
+      }
+
+      // PAGE 9: Oath / name
+      let nameSubmitted = false;
+      const funnyNameResponses = [
+        "Hmm... that's a lot of letters for someone who doesn't want free food.",
+        "Interesting name. Are you SURE you want to sign this?",
+        "Your parents named you that so you'd go to Kadiwa one day. True story.",
+        "Great name! Even greater reason to just say YES instead.",
+      ];
+      function checkName() {
+        const val = document.getElementById("name-inp").value.trim();
+        if (val.length > 2) {
+          document.getElementById("fb9").textContent =
+            funnyNameResponses[
+              Math.floor(Math.random() * funnyNameResponses.length)
+            ];
+        }
+      }
+      function checkNameSubmit() {
+        const val = document.getElementById("name-inp").value.trim();
+        if (val.length < 2) {
+          document.getElementById("fb9").textContent =
+            "Type your name first! 😅";
+          return;
+        }
+        document.getElementById("fb9").textContent =
+          `✅ "${val}" has been submitted to the FOMO Registry. Processing...`;
+        setTimeout(() => {
+          document.getElementById("fb9").textContent =
+            `😱 ERROR: The system rejected "${val}" because you clearly WANT to come. Proceeding anyway.`;
+          document.getElementById("oath-next").style.display = "block";
+        }, 1500);
+      }
+
+      // PAGE 10: Verdict animation
+      function animateVerdict() {
+        let pct = 0;
+        const bar = document.getElementById("v-no");
+        const txt = document.getElementById("verdict-text");
+        const interval = setInterval(() => {
+          pct += 3;
+          bar.style.width = Math.min(pct, 50) + "%";
+          txt.textContent = `Votes counted: ${pct}%...`;
+          if (pct >= 50) {
+            clearInterval(interval);
+            setTimeout(() => {
+              let pct2 = 50;
+              const i2 = setInterval(() => {
+                pct2 -= 5;
+                bar.style.width = Math.max(0, pct2) + "%";
+                txt.textContent = `Recounting votes... ${pct2}% No votes found...`;
+                if (pct2 <= 0) {
+                  clearInterval(i2);
+                  txt.textContent = "Final tally: 0% No • 100% YES ✅";
+                }
+              }, 80);
+            }, 600);
+          }
+        }, 40);
+      }
+
+      // Confetti
+      const canvas = document.getElementById("confetti");
+      const ctx = canvas.getContext("2d");
+      let pieces = [],
+        raf;
+      function launchConfetti() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.style.display = "block";
+        pieces = [];
+        const cols = [
+          "#ff6fa9",
+          "#8c6fff",
+          "#4ecdf2",
+          "#ffd166",
+          "#4ade80",
+          "#f97316",
+        ];
+        for (let i = 0; i < 160; i++) {
+          pieces.push({
+            x: Math.random() * canvas.width,
+            y: -20 - Math.random() * 200,
+            size: 6 + Math.random() * 8,
+            col: cols[Math.floor(Math.random() * cols.length)],
+            vy: 2 + Math.random() * 4,
+            vx: -2 + Math.random() * 4,
+            rot: Math.random() * 360,
+            rv: -6 + Math.random() * 12,
+            shape: Math.random() > 0.5 ? "c" : "r",
+          });
+        }
+        cancelAnimationFrame(raf);
+        drawConfetti();
+        setTimeout(() => {
+          canvas.style.display = "none";
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          cancelAnimationFrame(raf);
+        }, 3500);
+      }
+      function drawConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.rv;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.col;
+          if (p.shape === "c") {
+            ctx.beginPath();
+            ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+          ctx.restore();
+        });
+        raf = requestAnimationFrame(drawConfetti);
+      }
+    </script>
+  </body>
+</html>
