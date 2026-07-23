@@ -1192,12 +1192,45 @@
       // PAGE 1: dodge button
       const nob1 = document.getElementById("no-btn-1");
       const wrap1 = nob1.parentElement;
+      let dodgeCount1 = 0;
+      const MAX_DODGE = 3;
+
       function dodge1() {
         const w = wrap1.offsetWidth - nob1.offsetWidth;
         const h = wrap1.offsetHeight - nob1.offsetHeight;
         nob1.style.left = Math.max(0, Math.random() * w) + "px";
         nob1.style.top = Math.max(0, Math.random() * h) + "px";
       }
+
+      // Desktop: hover dodges first 3 times, stays put on 4th
+      nob1.addEventListener("mouseenter", () => {
+        if (dodgeCount1 < MAX_DODGE) {
+          dodgeCount1++;
+          dodge1();
+        }
+        // 4th hover: button stays — user can now actually click it
+      });
+
+      // Mobile: first 3 touches dodge and are blocked, 4th is a real tap
+      nob1.addEventListener(
+        "touchstart",
+        (e) => {
+          if (dodgeCount1 < MAX_DODGE) {
+            e.preventDefault(); // swallow tap, just dodge
+            dodgeCount1++;
+            dodge1();
+          }
+          // 4th touch: no preventDefault → fires as a real click
+        },
+        { passive: false },
+      );
+
+      // Click only fires after 3 dodges are done
+      nob1.addEventListener("click", () => {
+        if (dodgeCount1 >= MAX_DODGE) {
+          goTo(1); // or whatever your next-page call is
+        }
+      });
 
       // PAGE 2: reason picker
       let reasonPicked = false;
